@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ColaUnlocker 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* === СТИЛИ (без изменений, кроме того, что убран второй инпут в разметке) === */
+    :root {
+      --bg: #050509;
+      --bg2: #0b0b12;
+      --accent: #4af2a1;
+      --accent-soft: rgba(74, 242, 161, 0.15);
+      --accent-red: #ff4b81;
+      --text: #e9ecf4;
+      --muted: #8b90a4;
+      --card: #111321;
+      --border: #202338;
+      --danger: #ff4b4b;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+      --shadow-inner: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      --transition-fast: 0.15s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: radial-gradient(circle at top, #15182a 0, #050509 40%, #050509 100%);
+      color: var(--text);
+      font-family: var(--font-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+    }
+
+    .glass {
+      background: radial-gradient(circle at top left, rgba(74, 242, 161, 0.06), transparent 55%),
+        radial-gradient(circle at top right, rgba(255, 75, 129, 0.08), transparent 55%),
+        linear-gradient(145deg, rgba(15, 18, 32, 0.96), rgba(4, 6, 14, 0.98));
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(30px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 -40%, rgba(74, 242, 161, 0.16), transparent 50%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .glass-inner {
+      position: relative;
+      padding: 18px 18px 16px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .traffic-dots {
+      display: flex;
+      gap: 6px;
+      margin-right: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .dot.red {
+      background: #ff5f57;
+    }
+    .dot.yellow {
+      background: #febc2e;
+    }
+    .dot.green {
+      background: #28c840;
+    }
+
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .title-row {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-shadow: 0 0 18px rgba(74, 242, 161, 0.45);
+      white-space: nowrap;
+    }
+
+    .badge-ver {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 242, 161, 0.4);
+      background: radial-gradient(circle at top, rgba(74, 242, 161, 0.2), transparent 70%);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+
+    .badge-type {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 144, 164, 0.35);
+      background: rgba(10, 12, 24, 0.8);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .subtitle span.highlight {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .subtitle-divider {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(139, 144, 164, 0.7);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(10, 41, 26, 0.9);
+      border: 1px solid rgba(74, 242, 161, 0.4);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(74, 242, 161, 0.35);
+      font-size: 11px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(74, 242, 161, 0.8);
+    }
+
+    .status-text span {
+      color: var(--muted);
+    }
+
+    .label-ghost {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 144, 164, 0.35);
+      background: rgba(6, 8, 18, 0.8);
+    }
+
+    .panel-login {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: radial-gradient(circle at top left, rgba(74, 242, 161, 0.08), transparent 60%),
+        linear-gradient(135deg, rgba(8, 10, 22, 0.94), rgba(5, 7, 16, 0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 14px 14px 12px;
+      margin-bottom: 6px;
+      box-shadow: var(--shadow-inner);
+    }
+
+    .panel-login-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .login-title {
+      font-weight: 500;
+      color: #c0c5dd;
+    }
+
+    .login-caption {
+      font-size: 11px;
+      text-transform: none;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+    }
+
+    .login-caption span {
+      color: var(--accent);
+    }
+
+    .login-inputs {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .field-input {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(40, 43, 78, 0.95);
+      background: radial-gradient(circle at top left, rgba(74, 242, 161, 0.08), transparent 60%),
+        linear-gradient(135deg, #050612, #050614);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), transform var(--transition-fast);
+      box-shadow: 0 0 0 1px rgba(4, 255, 164, 0.05);
+    }
+
+    input::placeholder {
+      color: rgba(139, 144, 164, 0.8);
+    }
+
+    input:focus {
+      border-color: rgba(74, 242, 161, 0.9);
+      box-shadow: 0 0 0 1px rgba(74, 242, 161, 0.35), 0 0 24px rgba(74, 242, 161, 0.35);
+      transform: translateY(-0.5px);
+      background: radial-gradient(circle at top, rgba(74, 242, 161, 0.12), transparent 65%),
+        linear-gradient(135deg, #050612, #050614);
+    }
+
+    .btn-primary {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 242, 161, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(74, 242, 161, 0.35), transparent 60%),
+        linear-gradient(120deg, #0a1410, #05100b);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 0 18px rgba(74, 242, 161, 0.5);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 26px rgba(74, 242, 161, 0.7);
+      background: radial-gradient(circle at 0 0, rgba(74, 242, 161, 0.45), transparent 60%),
+        linear-gradient(120deg, #0a1510, #071a12);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 0 10px rgba(74, 242, 161, 0.6);
+    }
+
+    .btn-primary span.chevron {
+      font-size: 14px;
+      transform: translateY(0.5px);
+    }
+
+    .login-hint {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .login-hint span.key-cta {
+      color: var(--accent);
+      cursor: default;
+    }
+
+    .panel-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.15fr);
+      gap: 10px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.02), transparent 65%),
+        linear-gradient(140deg, rgba(6, 8, 20, 0.96), rgba(3, 5, 12, 0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      box-shadow: var(--shadow-inner);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 230px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .card-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      color: #cbd1eb;
+      font-weight: 500;
+    }
+
+    .card-pill {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 144, 164, 0.4);
+      background: rgba(4, 6, 16, 0.9);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+
+    .card-sub {
+      font-size: 11px;
+      text-transform: none;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+    }
+
+    .card-sub span.ok {
+      color: var(--accent);
+    }
+
+    .card-sub span.bad {
+      color: var(--accent-red);
+    }
+
+    .card-status {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .status-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 242, 161, 0.4);
+      color: var(--accent);
+      background: rgba(7, 20, 14, 0.9);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      padding: 8px 9px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(40, 43, 78, 0.95);
+      background: radial-gradient(circle at top left, rgba(74, 242, 161, 0.06), transparent 60%),
+        linear-gradient(135deg, #050612, #050614);
+      color: var(--text);
+      font-size: 13px;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), transform var(--transition-fast);
+      box-shadow: 0 0 0 1px rgba(4, 255, 164, 0.03);
+    }
+
+    textarea::placeholder {
+      color: rgba(139, 144, 164, 0.8);
+    }
+
+    textarea:focus {
+      border-color: rgba(74, 242, 161, 0.9);
+      box-shadow: 0 0 0 1px rgba(74, 242, 161, 0.35), 0 0 24px rgba(74, 242, 161, 0.35);
+      background: radial-gradient(circle at top, rgba(74, 242, 161, 0.12), transparent 65%),
+        linear-gradient(135deg, #050612, #050614);
+      transform: translateY(-0.5px);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .card-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-small {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 144, 164, 0.4);
+      background: rgba(4, 6, 16, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .pill-small.ok {
+      border-color: rgba(74, 242, 161, 0.5);
+      color: var(--accent);
+      background: rgba(7, 20, 14, 0.9);
+    }
+
+    .btn-ghost {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 144, 164, 0.45);
+      background: rgba(6, 8, 18, 0.9);
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        color var(--transition-fast), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(13, 16, 32, 0.95);
+      border-color: rgba(74, 242, 161, 0.5);
+      color: var(--accent);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-ghost:active {
+      transform: translateY(0);
+    }
+
+    .btn-download {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 242, 161, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(74, 242, 161, 0.4), transparent 60%),
+        linear-gradient(120deg, #071810, #03120b);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 0 22px rgba(74, 242, 161, 0.7);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(74, 242, 161, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(74, 242, 161, 0.5), transparent 60%),
+        linear-gradient(120deg, #091f15, #03150c);
+    }
+
+    .btn-download:active {
+      transform: translateY(0);
+      box-shadow: 0 0 16px rgba(74, 242, 161, 0.8);
+    }
+
+    .btn-download .icon {
+      font-size: 15px;
+    }
+
+    .download-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .download-meta span {
+      color: var(--accent);
+    }
+
+    .footer {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 820px) {
+      .panel-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .login-inputs {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        align-self: flex-end;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 12px;
+      }
+
+      .glass-inner {
+        padding: 14px 12px 12px;
+      }
+
+      .panel-login {
+        padding: 12px 10px;
+      }
+
+      .card {
+        padding: 9px;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="glass">
+      <div class="glass-inner">
+        <!-- TOP BAR -->
+        <div class="topbar">
+          <div class="topbar-left">
+            <div class="traffic-dots">
+              <div class="dot red"></div>
+              <div class="dot yellow"></div>
+              <div class="dot green"></div>
+            </div>
+            <div class="title-wrap">
+              <div class="title-row">
+                <div class="title">COLAUNLOCKER</div>
+                <div class="badge-ver">1.0</div>
+                <div class="badge-type">Roblox FPS unlocker</div>
+              </div>
+              <div class="subtitle">
+                <span class="highlight">unlock fps</span> up to 360
+                <span class="subtitle-divider"></span>
+                zero install
+                <span class="subtitle-divider"></span>
+                pure client-side tweaks
+              </div>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <div class="status-pill">
+              <div class="status-dot"></div>
+              <span class="status-text"><span>Status:</span> Online</span>
+            </div>
+            <div class="label-ghost">BUILD 2603</div>
+          </div>
+        </div>
+
+        <!-- LOGIN (БЕЗ КЛЮЧА) -->
+        <div class="panel-login">
+          <div class="panel-login-header">
+            <div>
+              <div class="login-title">ACCESS / LOGIN</div>
+              <div class="login-caption">
+                no key system &mdash; free access
+              </div>
+            </div>
+            <div>enter nickname</div>
+          </div>
+          <div class="login-inputs">
+            <div class="field-group">
+              <div class="field-label">username</div>
+              <div class="field-input">
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="your nickname"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+            <button class="btn-primary" id="loginBtn">
+              CONTINUE
+              <span class="chevron">›</span>
+            </button>
+          </div>
+          <div class="login-hint">
+            <span>ColaUnlocker распространяется бесплатно, ключ не нужен.</span>
+            <span class="key-cta">contact: @your_handle_here</span>
+          </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="panel-main">
+          <!-- LEFT: CONSOLE -->
+          <div class="card" id="leftCard">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-title-row">
+                  <div class="card-title">CONSOLE</div>
+                  <div class="card-pill">log</div>
+                </div>
+                <div class="card-sub">
+                  <span class="ok">ready</span> &mdash; free build
+                </div>
+              </div>
+              <div class="card-status">
+                auth:
+                <span class="status-tag" id="authStatusTag">GUEST</span>
+              </div>
+            </div>
+            <textarea
+              id="console"
+              spellcheck="false"
+              placeholder='[ColaUnlocker] paste roblox path or just spam here, it is only a fake console :)'
+            >[ColaUnlocker] 1.0 booting...
+[ColaUnlocker] free build, no key required.
+[ColaUnlocker] enter nickname and press CONTINUE.</textarea>
+            <div class="card-footer">
+              <div class="card-footer-left">
+                <div class="pill-small">console</div>
+                <div class="pill-small ok" id="authPill">unlocked</div>
+              </div>
+              <button class="btn-ghost" id="clearConsoleBtn">
+                clear <span>log</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT: DOWNLOAD -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-title-row">
+                  <div class="card-title">DOWNLOAD</div>
+                  <div class="card-pill">client</div>
+                </div>
+                <div class="card-sub">
+                  latest build: <span class="ok">ColaUnlocker_1.0.exe</span>
+                </div>
+              </div>
+              <div class="card-status">
+                checksum:
+                <span class="status-tag">SHA256 • local</span>
+              </div>
+            </div>
+            <textarea
+              id="hashInfo"
+              spellcheck="false"
+              placeholder="hash / build info"
+            >file: ColaUnlocker_1.0.exe
+size: ~1.3 MB
+hash:  0000-0000-0000-0000
+build: 2603 / stable
+note:  run before starting Roblox</textarea>
+            <div class="card-footer">
+              <div class="card-footer-left">
+                <div class="download-meta">
+                  status: <span id="downloadStatus">ready</span>
+                </div>
+              </div>
+              <button class="btn-download" id="downloadBtn">
+                <span class="icon">⬇</span>
+                DOWNLOAD
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+          <span>ColaUnlocker 1.0 · experimental build · use at your own risk.</span>
+          <span>
+            created by <a href="#" target="_blank">@your_handle_here</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const usernameInput = document.getElementById("username");
+    const consoleBox = document.getElementById("console");
+    const clearConsoleBtn = document.getElementById("clearConsoleBtn");
+    const authStatusTag = document.getElementById("authStatusTag");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const downloadStatus = document.getElementById("downloadStatus");
+
+    function logToConsole(line) {
+      const ts = new Date()
+        .toTimeString()
+        .split(" ")[0]
+        .split(":")
+        .slice(0, 2)
+        .join(":");
+      consoleBox.value += `\n[${ts}] ${line}`;
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    loginBtn.addEventListener("click", () => {
+      const user = usernameInput.value.trim();
+
+      if (!user) {
+        logToConsole("[ColaUnlocker] username missing.");
+        return;
+      }
+
+      authStatusTag.textContent = "USER";
+      logToConsole(`[ColaUnlocker] welcome, ${user}. free build active.`);
+    });
+
+    clearConsoleBtn.addEventListener("click", () => {
+      consoleBox.value = "";
+      logToConsole("[ColaUnlocker] console cleared.");
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      logToConsole("[ColaUnlocker] starting download...");
+
+      // Заменяй ссылку на свою реальную
+      const url = "https://your-domain.com/ColaUnlocker_1.0.exe";
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ColaUnlocker_1.0.exe";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      downloadStatus.textContent = "downloaded";
+      logToConsole("[ColaUnlocker] download requested (check your browser).");
+    });
+  </script>
+</body>
+</html>
