@@ -2,10 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>ColaUnlocker 1.0</title>
+  <title>ColaUnlocker 1.0 · Windows Unlocker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* === СТИЛИ (без изменений, кроме того, что убран второй инпут в разметке) === */
     :root {
       --bg: #050509;
       --bg2: #0b0b12;
@@ -683,33 +682,33 @@
               <div class="title-row">
                 <div class="title">COLAUNLOCKER</div>
                 <div class="badge-ver">1.0</div>
-                <div class="badge-type">Roblox FPS unlocker</div>
+                <div class="badge-type">Windows file unlocker</div>
               </div>
               <div class="subtitle">
-                <span class="highlight">unlock fps</span> up to 360
+                <span class="highlight">разблокировка</span> занятых файлов
                 <span class="subtitle-divider"></span>
-                zero install
+                завершение процессов
                 <span class="subtitle-divider"></span>
-                pure client-side tweaks
+                снятие ограничений доступа
               </div>
             </div>
           </div>
           <div class="topbar-right">
             <div class="status-pill">
               <div class="status-dot"></div>
-              <span class="status-text"><span>Status:</span> Online</span>
+              <span class="status-text"><span>Status:</span> Stable</span>
             </div>
             <div class="label-ghost">BUILD 2603</div>
           </div>
         </div>
 
-        <!-- LOGIN (БЕЗ КЛЮЧА) -->
+        <!-- LOGIN (FORMAL) -->
         <div class="panel-login">
           <div class="panel-login-header">
             <div>
-              <div class="login-title">ACCESS / LOGIN</div>
+              <div class="login-title">SESSION / USER</div>
               <div class="login-caption">
-                no key system &mdash; free access
+                локальный режим, <span>без ключей</span>
               </div>
             </div>
             <div>enter nickname</div>
@@ -732,44 +731,49 @@
             </button>
           </div>
           <div class="login-hint">
-            <span>ColaUnlocker распространяется бесплатно, ключ не нужен.</span>
+            <span>ColaUnlocker — утилита для Windows, снимает блокировку «неудаляемых» файлов.</span>
             <span class="key-cta">contact: @your_handle_here</span>
           </div>
         </div>
 
         <!-- MAIN -->
         <div class="panel-main">
-          <!-- LEFT: CONSOLE -->
+          <!-- LEFT: CONSOLE / USAGE -->
           <div class="card" id="leftCard">
             <div class="card-header">
               <div class="card-header-left">
                 <div class="card-title-row">
-                  <div class="card-title">CONSOLE</div>
-                  <div class="card-pill">log</div>
+                  <div class="card-title">USAGE</div>
+                  <div class="card-pill">guide</div>
                 </div>
                 <div class="card-sub">
-                  <span class="ok">ready</span> &mdash; free build
+                  <span class="ok">Windows 7 / 8 / 10 / 11</span> · x64
                 </div>
               </div>
               <div class="card-status">
-                auth:
+                session:
                 <span class="status-tag" id="authStatusTag">GUEST</span>
               </div>
             </div>
             <textarea
               id="console"
               spellcheck="false"
-              placeholder='[ColaUnlocker] paste roblox path or just spam here, it is only a fake console :)'
-            >[ColaUnlocker] 1.0 booting...
-[ColaUnlocker] free build, no key required.
-[ColaUnlocker] enter nickname and press CONTINUE.</textarea>
+              placeholder="Инструкция по использованию ColaUnlocker."
+            >[ColaUnlocker] 1.0 ready.
+
+1) Скачай ColaUnlocker и запусти от имени администратора.
+2) Выбери файл/папку, которую не удаётся удалить/переименовать.
+3) Нажми UNLOCK, дождись завершения всех блокирующих процессов.
+4) Повтори действие с файлом (удаление, перемещение и т.п.).
+
+Примечание: утилита не лечит вирусы, а только снимает блокировку с файлов.</textarea>
             <div class="card-footer">
               <div class="card-footer-left">
-                <div class="pill-small">console</div>
-                <div class="pill-small ok" id="authPill">unlocked</div>
+                <div class="pill-small">info</div>
+                <div class="pill-small ok" id="authPill">local</div>
               </div>
               <button class="btn-ghost" id="clearConsoleBtn">
-                clear <span>log</span>
+                clear <span>text</span>
               </button>
             </div>
           </div>
@@ -780,26 +784,27 @@
               <div class="card-header-left">
                 <div class="card-title-row">
                   <div class="card-title">DOWNLOAD</div>
-                  <div class="card-pill">client</div>
+                  <div class="card-pill">setup</div>
                 </div>
                 <div class="card-sub">
-                  latest build: <span class="ok">ColaUnlocker_1.0.exe</span>
+                  latest build: <span class="ok">ColaUnlocker_1.0_Setup.exe</span>
                 </div>
               </div>
               <div class="card-status">
-                checksum:
-                <span class="status-tag">SHA256 • local</span>
+                platform:
+                <span class="status-tag">Windows x64</span>
               </div>
             </div>
             <textarea
               id="hashInfo"
               spellcheck="false"
               placeholder="hash / build info"
-            >file: ColaUnlocker_1.0.exe
-size: ~1.3 MB
+            >file: ColaUnlocker_1.0_Setup.exe
+size: ~1.5 MB
 hash:  0000-0000-0000-0000
 build: 2603 / stable
-note:  run before starting Roblox</textarea>
+os:    Windows 7/8/10/11 (x64)
+note:  запускать от имени администратора</textarea>
             <div class="card-footer">
               <div class="card-footer-left">
                 <div class="download-meta">
@@ -816,7 +821,7 @@ note:  run before starting Roblox</textarea>
 
         <!-- FOOTER -->
         <div class="footer">
-          <span>ColaUnlocker 1.0 · experimental build · use at your own risk.</span>
+          <span>ColaUnlocker 1.0 · Windows unlocker · use at your own risk.</span>
           <span>
             created by <a href="#" target="_blank">@your_handle_here</a>
           </span>
@@ -854,23 +859,23 @@ note:  run before starting Roblox</textarea>
       }
 
       authStatusTag.textContent = "USER";
-      logToConsole(`[ColaUnlocker] welcome, ${user}. free build active.`);
+      logToConsole(`[ColaUnlocker] welcome, ${user}. session started.`);
     });
 
     clearConsoleBtn.addEventListener("click", () => {
       consoleBox.value = "";
-      logToConsole("[ColaUnlocker] console cleared.");
+      logToConsole("[ColaUnlocker] info cleared.");
     });
 
     downloadBtn.addEventListener("click", () => {
       logToConsole("[ColaUnlocker] starting download...");
 
       // Заменяй ссылку на свою реальную
-      const url = "https://your-domain.com/ColaUnlocker_1.0.exe";
+      const url = "https://your-domain.com/ColaUnlocker_1.0_Setup.exe";
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "ColaUnlocker_1.0.exe";
+      a.download = "ColaUnlocker_1.0_Setup.exe";
       document.body.appendChild(a);
       a.click();
       a.remove();
